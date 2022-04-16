@@ -1,8 +1,16 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
+      /*  maven {
+            url "https://maven.google.com/"
+        }
+        maven {
+            url "https://repo.maven.apache.org/"
+        }*/
     }
 }
 dependencyResolutionManagement {
@@ -10,6 +18,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+       /* maven {
+            url "https://maven.google.com/"
+        }
+        maven {
+            url "https://repo.maven.apache.org/"
+        }*/
     }
 }
 rootProject.name = "Currency Calculator"

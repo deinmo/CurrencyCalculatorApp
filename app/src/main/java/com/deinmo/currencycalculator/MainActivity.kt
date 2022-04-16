@@ -1,22 +1,15 @@
 package com.deinmo.currencycalculator
 
 import android.os.Bundle
-import android.text.Editable
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,17 +21,32 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CurrencyCalculatorTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    MainScreen("Android")
-                }
+                // A surface container using the 'background' color from t
+                    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+                        toplevel()
+                    }
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(name: String) {
+fun toplevel(){
+    var currencyViewModel = CurrencyViewModel()
+    var string: MutableList<String>? = mutableListOf()
+
+    LaunchedEffect(key1 ="key") {
+        var symbols = currencyViewModel.getsymbols().value
+        symbols?.symbols?.AED?.let { string?.set(0, it) }
+        symbols?.symbols?.AFN?.let { string?.set(1, it) }
+        symbols?.symbols?.ALL?.let { string?.set(2, it) }
+        symbols?.symbols?.AMD?.let { string?.set(3, it) }
+    }
+    MainScreen(name = string)
+}
+
+@Composable
+fun MainScreen(name: List<String>?) {
     Box(modifier = Modifier
         .background(color = Color.White)
         .fillMaxSize()) {
@@ -52,15 +60,15 @@ fun MainScreen(name: String) {
                     Color.Gray))
                 Text(text = "Signup",color = Color.Green)
             }
-            mytextview()
-            mytextview()
+            var str = mytextview()
+            Text(text = str,color = Color.Green)
             Row(horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp)){
-                mydropdown()
-                mydropdown()
+                mydropdown(name)
+                mydropdown(name)
             }
         }
 
@@ -72,42 +80,61 @@ fun MainScreen(name: String) {
 @Composable
 fun DefaultPreview() {
     CurrencyCalculatorTheme {
-        MainScreen("Android")
+        var currencyViewModel = CurrencyViewModel()
+        var string: MutableList<String>? = mutableListOf()
+        LaunchedEffect(key1 ="key") {
+            var symbols = currencyViewModel.getsymbols().value
+            symbols?.symbols?.AED?.let { string?.set(0, it) }
+            symbols?.symbols?.AFN?.let { string?.set(1, it) }
+            symbols?.symbols?.ALL?.let { string?.set(2, it) }
+            symbols?.symbols?.AMD?.let { string?.set(3, it) }
+        }
+        MainScreen(name = string)
     }
 }
 
 @Composable
-fun mytextview(){
+fun mytextview(): String {
     var text by remember{
         mutableStateOf("")
     }
+    var currencyViewModel = CurrencyViewModel()
+    var conversionClass = ConversionClass()
+    var string = String()
     TextField(value = text, onValueChange = {text = it}, modifier = Modifier
         .fillMaxWidth()
-        .padding(15.dp).background(Color.Gray),placeholder = {
+        .padding(15.dp)
+        .background(Color.Gray),placeholder = {
         Text(text = "enter currency")})
+    LaunchedEffect(key1 = "key2", block ={
+        conversionClass = currencyViewModel.getconversion(text.toInt()).value!!
+        string = conversionClass.result.toString()
+    })
+    return string
 }
 
 @Composable
-fun mydropdown(){
+fun mydropdown(items:List<String>?){
     var expanded by remember {
-        mutableStateOf(false)}
-    val items = listOf("USA", "NIG","GHN","CHN","IND")
+        mutableStateOf(false)
+    }
     var selected by remember {
         mutableStateOf(0)
     }
     Box(modifier = Modifier
         .fillMaxSize()
         .wrapContentSize(Alignment.TopStart)) {
-        Text(items.get(selected),modifier = Modifier
-            .fillMaxWidth()
-            .clickable { expanded = true }
-            .background(
-                Color.DarkGray
-            ))
+        items?.let {
+            Text(it?.get(selected),modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true }
+                .background(
+                    Color.DarkGray
+                ))
+        }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier
-            .fillMaxWidth()
+            .wrapContentSize()
             .background(color = Color.Gray)) {
-
 
             }
         }
