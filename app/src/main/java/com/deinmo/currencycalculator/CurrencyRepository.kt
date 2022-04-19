@@ -15,11 +15,8 @@ class CurrencyRepository {
 
     }
     companion object {
-        lateinit var currencyRepository: CurrencyRepository
+        var currencyRepository = CurrencyRepository()
         fun getInstance(): CurrencyRepository {
-            if (currencyRepository == null) {
-                currencyRepository = CurrencyRepository()
-            }
             return currencyRepository
         }
     }
@@ -28,15 +25,13 @@ class CurrencyRepository {
         suspend fun conversion(from:String, to:String, amount:Int):MutableLiveData<ConversionClass> {
             var convert:MutableLiveData<ConversionClass> = MutableLiveData()
             val result = currencyInterface.convert(from,to,amount)
-            if (result != null)
-                convert.setValue(result.body())
+            convert.setValue(result.body())
             return convert
         }
     suspend fun symbols(): MutableLiveData<CurrencySymbols> {
         var strings:MutableLiveData<CurrencySymbols> = MutableLiveData()
         val result = currencyInterface.getsymbols()
-        if (result != null)
-            strings.value = result.body()
+        strings.value = result.body()
         return strings
     }
 }

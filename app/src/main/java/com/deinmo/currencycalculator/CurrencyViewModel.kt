@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.lang.NumberFormatException
 import java.time.temporal.TemporalAmount
 
 class CurrencyViewModel : ViewModel() {
@@ -16,8 +17,15 @@ class CurrencyViewModel : ViewModel() {
         }
 
     }
-    suspend fun getconversion(amount: Int): MutableLiveData<ConversionClass> {
-        mutableLiveData = currencyRepository.conversion("AED","ALL",amount)
+    suspend fun getconversion(from: String,to: String,amount: String): MutableLiveData<ConversionClass> {
+        var num = 0
+        try {
+             num = amount.toInt()
+        }catch (e: NumberFormatException){
+            num = 0
+        }
+
+        mutableLiveData = currencyRepository.conversion(from,to,num)
         return mutableLiveData
     }
     suspend fun getsymbols(): MutableLiveData<CurrencySymbols> {

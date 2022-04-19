@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +17,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.deinmo.currencycalculator.ui.theme.CurrencyCalculatorTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlin.math.exp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,16 +37,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun toplevel(){
-    var currencyViewModel = CurrencyViewModel()
-    var string: MutableList<String>? = mutableListOf()
-
-    LaunchedEffect(key1 ="key") {
-        var symbols = currencyViewModel.getsymbols().value
-        symbols?.symbols?.AED?.let { string?.set(0, it) }
-        symbols?.symbols?.AFN?.let { string?.set(1, it) }
-        symbols?.symbols?.ALL?.let { string?.set(2, it) }
-        symbols?.symbols?.AMD?.let { string?.set(3, it) }
-    }
+    var string: MutableList<String>? = mutableListOf<String>("AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BRL","BSD","BTC","BTN","BWP","BYN","BYR","BZD","CAD","CDF","CHF","CLF","CLP","CNY","COP","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GGP","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","IDR","ILS","IMP","INR","IQD","IRR","ISK","JEP","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LTL","LVL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRO","MUR","MVR","MWK","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLL","SOS","SRD","STD","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VEF","VND","VUV","WST","XAF","XAG","XAU","XCD","XDR","XOF","XPF","YER","ZAR","ZMK","ZMW","ZWL")
     MainScreen(name = string)
 }
 
@@ -61,15 +57,11 @@ fun MainScreen(name: List<String>?) {
                 Text(text = "Signup",color = Color.Green)
             }
             var str = mytextview()
-            Text(text = str,color = Color.Green)
-            Row(horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp)){
-                mydropdown(name)
-                mydropdown(name)
-            }
+            var srt1 = mydropdown(name)
+            var str2 = mydropdown(name)
+            var string  = Button(from = srt1, to = str2, text = str)
+            Text(text = string,color = Color.Green)
+
         }
 
     }
@@ -80,15 +72,7 @@ fun MainScreen(name: List<String>?) {
 @Composable
 fun DefaultPreview() {
     CurrencyCalculatorTheme {
-        var currencyViewModel = CurrencyViewModel()
-        var string: MutableList<String>? = mutableListOf()
-        LaunchedEffect(key1 ="key") {
-            var symbols = currencyViewModel.getsymbols().value
-            symbols?.symbols?.AED?.let { string?.set(0, it) }
-            symbols?.symbols?.AFN?.let { string?.set(1, it) }
-            symbols?.symbols?.ALL?.let { string?.set(2, it) }
-            symbols?.symbols?.AMD?.let { string?.set(3, it) }
-        }
+        var string: MutableList<String>? = mutableListOf<String>("AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BIF","BMD","BND","BOB","BRL","BSD","BTC","BTN","BWP","BYN","BYR","BZD","CAD","CDF","CHF","CLF","CLP","CNY","COP","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP","ERN","ETB","EUR","FJD","FKP","GBP","GEL","GGP","GHS","GIP","GMD","GNF","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","IDR","ILS","IMP","INR","IQD","IRR","ISK","JEP","JMD","JOD","JPY","KES","KGS","KHR","KMF","KPW","KRW","KWD","KYD","KZT","LAK","LBP","LKR","LRD","LSL","LTL","LVL","LYD","MAD","MDL","MGA","MKD","MMK","MNT","MOP","MRO","MUR","MVR","MWK","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","RWF","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SLL","SOS","SRD","STD","SVC","SYP","SZL","THB","TJS","TMT","TND","TOP","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VEF","VND","VUV","WST","XAF","XAG","XAU","XCD","XDR","XOF","XPF","YER","ZAR","ZMK","ZMW","ZWL")
         MainScreen(name = string)
     }
 }
@@ -98,44 +82,60 @@ fun mytextview(): String {
     var text by remember{
         mutableStateOf("")
     }
-    var currencyViewModel = CurrencyViewModel()
-    var conversionClass = ConversionClass()
-    var string = String()
     TextField(value = text, onValueChange = {text = it}, modifier = Modifier
         .fillMaxWidth()
         .padding(15.dp)
         .background(Color.Gray),placeholder = {
         Text(text = "enter currency")})
-    LaunchedEffect(key1 = "key2", block ={
-        conversionClass = currencyViewModel.getconversion(text.toInt()).value!!
-        string = conversionClass.result.toString()
-    })
-    return string
+    return text
 }
 
 @Composable
-fun mydropdown(items:List<String>?){
+fun mydropdown(items:List<String>?): String {
     var expanded by remember {
         mutableStateOf(false)
     }
-    var selected by remember {
-        mutableStateOf(0)
+    var selected: String by remember {
+        mutableStateOf(items?.get(0)!!)
     }
     Box(modifier = Modifier
-        .fillMaxSize()
-        .wrapContentSize(Alignment.TopStart)) {
-        items?.let {
-            Text(it?.get(selected),modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = true }
-                .background(
-                    Color.DarkGray
-                ))
+        .fillMaxWidth(),contentAlignment = Alignment.Center) {
+        Row(modifier = Modifier
+            .padding(16.dp).background(Color.Blue)
+            .clickable { expanded != expanded }
+            .padding(8.dp),horizontalArrangement = Arrangement.Center,verticalAlignment = Alignment.CenterVertically) {
+            Text(text = selected,modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown,contentDescription = "")
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier
-            .wrapContentSize()
             .background(color = Color.Gray)) {
+            if (items != null) {
+                items.forEach {
+                    item -> DropdownMenuItem(onClick = {
+                    expanded = false
+                    selected = item
+                }) {
+                    Text(text = item)
+                }
+                }
+            }
 
             }
         }
+    return selected
     }
+@Composable
+fun Button(from: String,to: String,text: String ): String {
+    var currencyViewModel = CurrencyViewModel()
+    var conversionClass: ConversionClass
+    var string = String()
+    val coroutineScope = rememberCoroutineScope()
+    androidx.compose.material.Button(onClick = {
+        coroutineScope.launch { conversionClass = currencyViewModel.getconversion(from,to,text).value!!
+            string = conversionClass.result.toString() }
+
+    }){
+        Text(text = "Convert")
+    }
+    return string
+}
