@@ -16,10 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.deinmo.currencycalculator.data.remote.dtos.conversionclass.ConversionClass
+import com.deinmo.currencycalculator.presentation.CurrencyViewModel
 import com.deinmo.currencycalculator.ui.theme.CurrencyCalculatorTheme
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.exp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

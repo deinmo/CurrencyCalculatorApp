@@ -1,4 +1,4 @@
-package com.deinmo.currencycalculator
+package com.deinmo.currencycalculator.data.remote.dtos.currencysymbols
 
 import com.google.gson.annotations.SerializedName
 

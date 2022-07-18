@@ -1,19 +1,21 @@
-package com.deinmo.currencycalculator
+package com.deinmo.currencycalculator.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.deinmo.currencycalculator.data.remote.dtos.conversionclass.ConversionClass
+import com.deinmo.currencycalculator.data.remote.dtos.currencysymbols.CurrencySymbols
+import com.deinmo.currencycalculator.domain.CurrencyRepositoryImpl
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
-import java.time.temporal.TemporalAmount
 
 class CurrencyViewModel : ViewModel() {
     lateinit var mutableLiveData: MutableLiveData<ConversionClass>
     lateinit var stringmutable: MutableLiveData<CurrencySymbols>
-    lateinit var currencyRepository: CurrencyRepository
+    lateinit var currencyRepository: CurrencyRepositoryImpl
     init {
         viewModelScope.launch {
-            currencyRepository = CurrencyRepository.getInstance()
+            currencyRepository = CurrencyRepositoryImpl.getInstance()
         }
 
     }
