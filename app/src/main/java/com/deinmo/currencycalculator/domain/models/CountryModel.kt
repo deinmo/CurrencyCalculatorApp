@@ -3,8 +3,8 @@ package com.deinmo.currencycalculator.domain.models
 import android.graphics.drawable.Drawable
 
 data class CountryModel(
-    val countryName: String? = null,
-    val symbol: String? = null,
-    val image: Drawable? = null,
-    val rate: Int? = null
+    var countryName: String? = null,
+    var symbol: String? = null,
+    var image: Int? = null,
+    var rate: Double? = null
 )
