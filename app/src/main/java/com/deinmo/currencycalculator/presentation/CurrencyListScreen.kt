@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.deinmo.currencycalculator.domain.models.CountryModel
 
-@RequiresApi(Build.VERSION_CODES.M)
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun CurrencyListScreen(
     viewModel: CurrencyViewModel = hiltViewModel()
@@ -49,7 +49,7 @@ fun CurrencyListItem(
     modifier: Modifier = Modifier
     ){
     Row(
-        modifier = modifier,
+        modifier = modifier.padding(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -64,10 +64,14 @@ fun CurrencyListItem(
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = countryModel.rate.toString(),modifier = Modifier,color = MaterialTheme.colors.onBackground)
+                Text(
+                    text = countryModel.rate.toString(),
+                    modifier = Modifier,
+                    color = MaterialTheme.colors.onBackground
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = countryModel.symbol!!, color = MaterialTheme.colors.onBackground)
+            }
         }
     }
-}

@@ -24,16 +24,16 @@ class CurrencyRepositoryImpl @Inject constructor(
 ):CurrencyRepository {
 
    override suspend fun getRates(fetchFromRemote: Boolean):Flow<Resource<List<CountryModel>>> = flow {
-        emit(Resource.Loading())
-        val latest = dao.getCountries().map { it.toCountryModel() }
-        emit(Resource.Success(latest))
+       emit(Resource.Loading())
+       val latest = dao.getCountries().map { it.toCountryModel() }
+       emit(Resource.Success(latest))
 
-        val isDbEmpty = latest.isEmpty()
-        val loadFromCache = !isDbEmpty && !fetchFromRemote
-        if(loadFromCache){
-            Resource.Loading(false)
-            return@flow
-        }
+       val isDbEmpty = latest.isEmpty()
+       val loadFromCache = !isDbEmpty && !fetchFromRemote
+       if(loadFromCache){
+           Resource.Loading(false)
+           return@flow
+       }
        var symbols: CurrencySymbols
        var latestRates: Latest
        var countryModels = mutableListOf<CountryModel>()
@@ -48,20 +48,21 @@ class CurrencyRepositoryImpl @Inject constructor(
                    }
                }
            }
-           countryModels.onEach { countryModel ->
-               saveCurrency(countryModel = countryModel)
-           }
-        }catch (e: IOException){
-            e.printStackTrace()
+       }catch (e: IOException){
+           e.printStackTrace()
            emit(Resource.Error("An unexpected error occured"))
-        }
-        catch (e: HttpException){
-            e.printStackTrace()
-            emit(Resource.Error("Server Error"))
-        }
-        Resource.Loading(false)
-        Resource.Success(countryModels)
-    }
+       }
+       catch (e: HttpException){
+           e.printStackTrace()
+           emit(Resource.Error("Server Error"))
+       }
+
+       countryModels.onEach { countryModel ->
+           saveCurrency(countryModel = countryModel)
+       }
+       emit(Resource.Loading(false))
+       emit(Resource.Success(countryModels as List<CountryModel>))
+   } as Flow<Resource<List<CountryModel>>>
 
     override suspend fun getLatestRates(): Flow<Resource<Latest>> = flow {
         try {

@@ -2,6 +2,7 @@ package com.deinmo.currencycalculator.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.deinmo.currencycalculator.data.remote.dtos.currencysymbols.CurrencySymbols
 import com.deinmo.currencycalculator.domain.models.CountryModel
@@ -9,7 +10,7 @@ import com.deinmo.currencycalculator.domain.models.CountryModel
 @Dao
 interface CurrencyDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCountry(country: CurrencyEntity)
 
    /* @Insert

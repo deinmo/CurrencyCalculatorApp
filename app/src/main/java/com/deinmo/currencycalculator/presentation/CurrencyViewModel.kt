@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,31 +22,33 @@ import com.deinmo.currencycalculator.data.remote.dtos.conversionclass.Conversion
 import com.deinmo.currencycalculator.data.remote.dtos.currencysymbols.CurrencySymbols
 import com.deinmo.currencycalculator.domain.CurrencyRepositoryImpl
 import com.deinmo.currencycalculator.domain.models.CountryModel
+import com.deinmo.currencycalculator.utils.ConnectivityObserver
 import com.deinmo.currencycalculator.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import okhttp3.internal.wait
 import java.lang.NumberFormatException
 import java.security.AccessController.getContext
 import javax.inject.Inject
 
-@RequiresApi(Build.VERSION_CODES.M)
+@RequiresApi(Build.VERSION_CODES.N)
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
     private val repository: CurrencyRepository,
-    application: Application
-) : AndroidViewModel(application) {
+    observer: ConnectivityObserver
+) : ViewModel() {
 
     var state by mutableStateOf(CurrenciesListState())
 
     init {
-        /*val context = getApplication<Application>().applicationContext
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = cm.getNetworkCapabilities()
-        networkInfo.
-        val connected = networkInfo != null
-        cm.is*/
+           /* observer.observe().onEach {
+                if (it == ConnectivityObserver.Status.Available)
+                    getRates(true)
+                else
+                    getRates(false)
+            }*/
         getRates(true)
     }
 

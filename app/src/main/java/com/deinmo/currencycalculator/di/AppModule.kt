@@ -1,6 +1,7 @@
 package com.deinmo.currencycalculator.di
 
 import android.app.Application
+import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.room.Room
 import com.deinmo.currencycalculator.data.CurrencyRepository
@@ -8,9 +9,12 @@ import com.deinmo.currencycalculator.data.local.CurrencyDao
 import com.deinmo.currencycalculator.data.local.CurrencyDatabase
 import com.deinmo.currencycalculator.data.remote.CurrencyInterface
 import com.deinmo.currencycalculator.domain.CurrencyRepositoryImpl
+import com.deinmo.currencycalculator.utils.ConnectivityObserver
+import com.deinmo.currencycalculator.utils.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -64,5 +68,11 @@ object AppModule {
     @Singleton
     fun provideRepository(api: CurrencyInterface, dao: CurrencyDao): CurrencyRepository {
         return CurrencyRepositoryImpl(api, dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityCheck(@ApplicationContext applicationContext: Context): ConnectivityObserver {
+        return NetworkConnectivityObserver(applicationContext)
     }
 }
